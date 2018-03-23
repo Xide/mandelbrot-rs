@@ -24,3 +24,11 @@ args:
         short: o
         help: output png file
         takes_value: true
+    - seed:
+        short: s
+        help: Top left corner, format= "(real, imaginary)" (default= "(-2.5, 1.25)")
+        takes_value: true
+    - camera_width:
+        short: w
+        help: Width of the generated image in the fractal (default= 4.5)
+        takes_value: true
