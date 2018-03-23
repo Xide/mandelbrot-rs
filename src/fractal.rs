@@ -16,6 +16,7 @@ pub trait MnPoint: Sized {
     // TODO: Turn the option into something like an Either(BailedOut, StillRunning)
     fn to_threshold(&self, max_iter: u64) -> Option<Self>;
     fn bailed_out(&self) -> bool;
+    fn is_in_bulb(&self) -> bool;
 }
 
 fn mandelbrot_next(z: Complex64, c: Complex64) -> Complex64 {
@@ -28,6 +29,7 @@ impl MnPoint for MnComputation {
     }
 
     fn to_threshold(&self, max_iter: u64) -> Option<MnComputation> {
+        if self.is_in_bulb() { return None; }
         match (1..max_iter)
             .fold_while(
                 self.clone(),
@@ -46,6 +48,13 @@ impl MnPoint for MnComputation {
                 _ => None
             }
 
+    }
+
+    fn is_in_bulb(&self) -> bool {
+        let p = (((self.c.re - 0.25) * (self.c.re - 0.25)) + (self.c.im * self.c.im)).sqrt();
+
+        self.c.re < p - (2.0 * (p * p)) + 0.25 ||
+            ((self.c.re + 1.0) * (self.c.re + 1.0)) + (self.c.im * self.c.im) < (1.0 / 16.0)
     }
 
     fn bailed_out(&self) -> bool {
