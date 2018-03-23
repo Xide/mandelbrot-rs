@@ -48,6 +48,8 @@ fn main() {
     window.scope(Complex64::new(-2.5, 1.25), 4.5);
     window.set_antialiasing(aa);
     let imgbuf = window.fill();
+
+    println!("Exporting image to {}", output_file);
     let ref mut fout = File::create(output_file).unwrap();
     image::ImageRgb8(imgbuf).save(fout, image::PNG).unwrap();
 
