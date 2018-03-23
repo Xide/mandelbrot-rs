@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/vim,rust,linux,emacs,images
 
 ### Emacs ###
@@ -100,6 +99,7 @@ anaconda-mode/
 
 # Portable Network Graphics
 *.png
+!/gallery/*.png
 
 # Animated Portable Network Graphics
 *.apng
