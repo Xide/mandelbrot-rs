@@ -1,0 +1,26 @@
+name: rs-mandelbrot
+version: "1.0"
+author: Germain G. <germain.gau@gmail.com>
+about: Explore mandelbrot set
+args:
+    - antialiasing:
+        short: aa
+        value_name: aa
+        help: Set antialiasing (will take aa ^ 2 steps / pixel)
+        takes_value: true
+    - iterations:
+        short: i
+        help: Sets the max number of iteration when generating a point
+        takes_value: true
+    - verbose:
+        short: v
+        multiple: true
+        help: Sets the level of verbosity
+    - resolution:
+        short: r
+        help: resolution in pixels, e.g 1920x1080
+        takes_value: true
+    - output:
+        short: o
+        help: output png file
+        takes_value: true

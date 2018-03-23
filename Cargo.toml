@@ -8,4 +8,4 @@ num-complex = "0.1"
 itertools = "0.7.7"
 image = "0.18.0"
 rayon = "1.0.1"
-pbr = "1.0.0"
+clap = {version = "2.31", features = ["yaml"]}
