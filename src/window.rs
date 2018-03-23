@@ -6,38 +6,6 @@ use color::{MnColor, MnSmoothScale};
 use fractal::{MnPoint, MnComputation};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
-// let wx = 1280;
-// let wy = 720;
-// // let wx = 1280;
-// // let wy = 720;
-//
-// let range_re = 3.5;
-// let range_im = range_re * ((wy as f64) / (wx as f64));
-//
-// let off_re = -0.75;
-// let off_im = 0.0;
-//
-// let step_re = (2.0 * range_re) / (wx as f64);
-// let step_im = (2.0 * range_im) / (wy as f64);
-//
-// let mut pb = ProgressBar::new(wx);
-//
-
-//
-// let mut imgbuf: image::RgbImage = image::ImageBuffer::new(wx as u32, wy as u32);
-//
-// (0..wx).collect::<Vec<u64>>().iter().map(
-//     |ox| {
-//         let x = ox.to_owned();
-//         (0..wy).collect::<Vec<u64>>().iter().map( |oy| {
-//             let y = oy.to_owned();
-//             imgbuf.put_pixel(x as u32, y as u32, pixels[x as usize][y as usize].to_owned());
-//             ()
-//         }).collect::<()>();
-//         ()
-//     }
-// ).collect::<()>();
-
 
 pub trait Window {
     fn new(width: u32, height: u32, max_step: u64) -> Self;
@@ -109,14 +77,8 @@ impl Window for ImageWindow {
         let mut g = 0_u64;
         let mut b = 0_u64;
 
-        // println!("Range x: {}, with aa: {}", range_x, range_aa_x);
-        // println!("Range y: {}, with aa: {}", range_y, range_aa_y);
         for off_x in step_iterator(0.0, range_x, range_aa_x) {
             for off_y in step_iterator(0.0, range_y.abs(), range_aa_y.abs()) {
-                // println!("{:?}", Complex64::new(
-                //     self.top_left.re + base_off_x + off_x,
-                //     self.top_left.im + base_off_y - off_y,
-                // ));
                 let color = MnSmoothScale::from_point(
                     MnComputation::new(Complex64::new(
                         self.top_left.re + base_off_x + off_x,
@@ -130,10 +92,11 @@ impl Window for ImageWindow {
             }
         }
 
+        let aa_div = (self.antialiasing * self.antialiasing) as u64;
         return image::Rgb::<u8>::from_channels(
-            (r / self.antialiasing as u64) as u8,
-            (g / self.antialiasing as u64) as u8,
-            (b / self.antialiasing as u64) as u8,
+            (r / aa_div) as u8,
+            (g / aa_div) as u8,
+            (b / aa_div) as u8,
             0
         );
     }
@@ -152,7 +115,6 @@ impl Window for ImageWindow {
 
         let mut row : Vec<image::Rgb<u8>>;
         for x in 0..self.dims.0 {
-            // let x = ox.to_owned();
             row = (0..self.dims.1).collect::<Vec<u32>>().par_iter().map(move |oy| {
                 let y = oy.to_owned();
                 print!("\r{:.1}%", (((x) * self.dims.1 + y) as f32 / (self.dims.0 * self.dims.1) as f32) * 100.0);
