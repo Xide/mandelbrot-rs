@@ -1,5 +1,6 @@
 # Mandelbrot-rs
 
+Simple Mandelbrot fractal generator developped in Rust for training purposes.
 
 ## Gallery
 
