@@ -5,13 +5,25 @@ use image::Pixel;
 use fractal::{MnComputation};
 
 pub trait MnColor {
-    fn from_point(p: Option<MnComputation>) -> Rgb<u8>;
+    fn from_point(&self, p: Option<MnComputation>) -> Rgb<u8>;
 }
 
-pub struct MnSmoothScale;
+pub struct MnSmoothScale {
+    start: (u8, u8, u8, u8),
+    end: (u8, u8, u8, u8),
+}
+
+impl MnSmoothScale {
+    pub fn new(start: (u8, u8, u8, u8), end: (u8, u8, u8, u8)) -> MnSmoothScale {
+        MnSmoothScale {
+            start,
+            end
+        }
+    }
+}
 
 impl MnColor for MnSmoothScale {
-    fn from_point(p: Option<MnComputation>) -> Rgb<u8> {
+    fn from_point(&self, p: Option<MnComputation>) -> Rgb<u8> {
         match p {
             _ if p.is_none() => Rgb::<u8>::from_channels(0, 0, 0, 0),
             op => {
@@ -20,7 +32,14 @@ impl MnColor for MnSmoothScale {
                     p.step as f64 -
                     (p.zn.norm().log(10.0) / 2.0_f64.log(10.0)).log(2.0)
                 ) as u8;
-                image::Rgb::<u8>::from_channels(c, c, c, 0)
+                let (start, end) = (self.start, self.end);
+                let nc = 1.0 - (f64::from(c) / 255.0);
+                image::Rgb::<u8>::from_channels(
+                    ((f64::from(end.0) * nc) + (f64::from(start.0) * (1.0 - nc))) as u8,
+                    ((f64::from(end.1) * nc) + (f64::from(start.1) * (1.0 - nc))) as u8,
+                    ((f64::from(end.2) * nc) + (f64::from(start.2) * (1.0 - nc))) as u8,
+                    ((f64::from(end.3) * nc) + (f64::from(start.3) * (1.0 - nc))) as u8
+                )
             }
         }
     }
