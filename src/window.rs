@@ -5,7 +5,7 @@ use num_complex::Complex64;
 use color::{MnColor, MnSmoothScale};
 use fractal::{MnPoint, MnComputation};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-
+use indicatif::{ProgressBar, ProgressStyle};
 
 pub trait Window {
     fn new(width: u32, height: u32, max_step: u64, color_gradient: ((u8, u8, u8, u8), (u8, u8, u8, u8))) -> Self;
@@ -122,19 +122,23 @@ impl Window for ImageWindow {
 
     fn fill(&self) -> image::RgbImage {
         let mut imgbuf: image::RgbImage = image::ImageBuffer::new(self.dims.0, self.dims.1);
-
+        
+        let pb = ProgressBar::new(self.dims.0 as u64);
+        pb.set_style(ProgressStyle::default_bar()
+            .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} ({eta})")
+            .progress_chars("#>-"));
         let mut row : Vec<image::Rgb<u8>>;
         for x in 0..self.dims.0 {
             row = (0..self.dims.1).collect::<Vec<u32>>().par_iter().map(move |oy| {
                 let y = oy.to_owned();
-                print!("\r{:.1}%", (((x) * self.dims.1 + y) as f32 / (self.dims.0 * self.dims.1) as f32) * 100.0);
                 self.calc_pixel(x, y)
             }).collect();
+            pb.set_position(x as u64);
             for y in 0..self.dims.1 {
                 imgbuf.put_pixel(x, y, row[y as usize]);
             }
         }
-        println!("\rDone .");
+        pb.finish_with_message("Done");
         imgbuf
     }
 }

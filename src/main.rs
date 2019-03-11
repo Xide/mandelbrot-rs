@@ -7,6 +7,7 @@ extern crate num_complex;
 extern crate image;
 extern crate rayon;
 extern crate regex;
+extern crate indicatif;
 
 // extern crate pbr;
 
