@@ -94,9 +94,7 @@ fn main() {
         dims.0,
         dims.1,
         iterations,
-        ((242, 180, 224, 0), (90, 55, 80, 0))
-
-        // ((237, 233, 132, 0), (15, 52, 70, 0))
+        ((254, 254, 254, 0), (0, 0, 0, 0))
     );
     window.scope(seed, camera_width);
     window.set_antialiasing(aa);
