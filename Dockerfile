@@ -14,4 +14,4 @@ RUN rm target/release/deps/mandelbrot* && cargo build --release
 
 FROM debian:stretch-slim
 COPY --from=build /mandelbrot-rs/target/release/mandelbrot .
-CMD ["./mandelbrot"]
+ENTRYPOINT ["./mandelbrot"]
