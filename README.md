@@ -53,7 +53,7 @@ docker run -it mandelbrot --help
 mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
 
 ## With Docker
-docker run -it mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
+docker run -it sigbilly/mandelbrot:master -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
 
 ```
 
