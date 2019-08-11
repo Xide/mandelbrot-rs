@@ -16,12 +16,29 @@ coords: `( re: -1.0, im: 0.33), size: 0.5`
 
 
 ## Requirements
-- nightly rustc compiler + cargo : [Install instructions](https://github.com/rust-lang-nursery/rustup.rs#working-with-nightly-rust)
+One of:
+- rustc compiler + cargo : [Install instructions](https://github.com/rust-lang-nursery/rustup.rs)
+- Docker (tested on 19.03.1-ce)
+
 
 ## Build
+
+```sh
+git clone https://github.com/Xide/mandelbrot-rs.git
+cd mandelbrot-rs
+```
+
+> With Cargo
+
 ```sh
 cargo build --release
 ./target/release/mandelbrot --help
+```
+
+> With Docker
+```sh
+docker build -t mandelbrot .
+docker run -it mandelbrot --help
 ```
 
 ## Usage
@@ -31,7 +48,12 @@ cargo build --release
 # mandelbrot --help
 
 # valley of seahorses example
+
+## With binary
 mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
+
+## With Docker
+docker run -it mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
 
 ```
 
@@ -43,3 +65,4 @@ mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
 - Cli: shortcuts for common resolutions
 - Corresponding Julia set explorer ?
 - Video generation ?
+s
