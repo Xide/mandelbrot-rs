@@ -7,16 +7,20 @@ Simple Mandelbrot fractal generator developped in Rust for training purposes.
 **Complete Mandelbrot set**
 
 ![](./gallery/uhd_complete.png)
-coords: `( re: -2.5, im: 1.25), size: 4.5`
+Command (default coordinates): `mandelbrot -s '(-0.25,0.0)' -w 4.5`
+
+> For an UHD high quality version you can run this command: 
+  `mandelbrot -r 7680x4320 -i 25000 -a 16`
+  This command will take **MUCH LONGER** to run (34mn with a Ryzen 3900X), and will stress the CPU during all the process. 
 
 **Near the "Valley of seahorses"**
 
 ![](./gallery/seahorse.png)
-coords: `( re: -1.0, im: 0.33), size: 0.5`
+command: `mandelbrot -s '(-0.75, 0.18)' -w 0.5`
 
 
 ## Requirements
-One of:
+*One* of:
 - rustc compiler + cargo : [Install instructions](https://github.com/rust-lang-nursery/rustup.rs)
 - Docker (tested on 19.03.1-ce)
 
@@ -28,14 +32,14 @@ git clone https://github.com/Xide/mandelbrot-rs.git
 cd mandelbrot-rs
 ```
 
-> With Cargo
+- With Cargo
 
 ```sh
 cargo build --release
 ./target/release/mandelbrot --help
 ```
 
-> With Docker
+- With Docker
 ```sh
 docker build -t mandelbrot .
 docker run -it mandelbrot --help
@@ -50,10 +54,10 @@ docker run -it mandelbrot --help
 # valley of seahorses example
 
 ## With binary
-mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
+mandelbrot -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s '(-0.75, 0.18)' -w 0.5
 
 ## With Docker
-docker run -it sigbilly/mandelbrot:master -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s "(-1.0, 0.33)" -w 0.5
+docker run -it sigbilly/mandelbrot:master -r 1920x1080 -a 8 -i 5000 -o seahorses.png -s '(-0.75, 0.18)' -w 0.5
 
 ```
 
@@ -65,4 +69,3 @@ docker run -it sigbilly/mandelbrot:master -r 1920x1080 -a 8 -i 5000 -o seahorses
 - Cli: shortcuts for common resolutions
 - Corresponding Julia set explorer ?
 - Video generation ?
-s

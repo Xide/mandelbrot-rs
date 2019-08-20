@@ -1,8 +1,6 @@
-
+use itertools::FoldWhile::{Continue, Done};
 use itertools::Itertools;
-use itertools::FoldWhile::{Done, Continue};
 use num_complex::Complex64;
-
 
 #[derive(Debug, Clone)]
 pub struct MnComputation {
@@ -25,36 +23,41 @@ fn mandelbrot_next(z: Complex64, c: Complex64) -> Complex64 {
 
 impl MnPoint for MnComputation {
     fn new(seed: Complex64) -> MnComputation {
-        MnComputation { zn: Complex64::new(0.0, 0.0), step: 0, c: seed }
+        MnComputation {
+            zn: Complex64::new(0.0, 0.0),
+            step: 0,
+            c: seed,
+        }
     }
 
     fn to_threshold(&self, max_iter: u64) -> Option<MnComputation> {
-        if self.is_in_bulb() { return None; }
+        if self.is_in_bulb() {
+            return None;
+        }
         match (1..max_iter)
-            .fold_while(
-                self.clone(),
-                |acc, _idx| {
-                    if acc.bailed_out() { Done(acc) }
-                    else {
-                        Continue(MnComputation {
-                            step: acc.step + 1,
-                            zn: mandelbrot_next(acc.zn, acc.c),
-                            c: acc.c
-                        })
-                    }
+            .fold_while(self.clone(), |acc, _idx| {
+                if acc.bailed_out() {
+                    Done(acc)
+                } else {
+                    Continue(MnComputation {
+                        step: acc.step + 1,
+                        zn: mandelbrot_next(acc.zn, acc.c),
+                        c: acc.c,
+                    })
                 }
-            ).into_inner() {
-                ref r if r.bailed_out() => Some(r.to_owned()),
-                _ => None
-            }
-
+            })
+            .into_inner()
+        {
+            ref r if r.bailed_out() => Some(r.to_owned()),
+            _ => None,
+        }
     }
 
     fn is_in_bulb(&self) -> bool {
         let p = (((self.c.re - 0.25) * (self.c.re - 0.25)) + (self.c.im * self.c.im)).sqrt();
 
-        self.c.re < p - (2.0 * (p * p)) + 0.25 ||
-            ((self.c.re + 1.0) * (self.c.re + 1.0)) + (self.c.im * self.c.im) < (1.0 / 16.0)
+        self.c.re < p - (2.0 * (p * p)) + 0.25
+            || ((self.c.re + 1.0) * (self.c.re + 1.0)) + (self.c.im * self.c.im) < (1.0 / 16.0)
     }
 
     fn bailed_out(&self) -> bool {
@@ -65,7 +68,6 @@ impl MnPoint for MnComputation {
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn diverging_computation_reach_threshold() {
