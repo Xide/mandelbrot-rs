@@ -4,8 +4,8 @@ use num_complex::Complex64;
 
 use color::{MnColor, MnSmoothScale};
 use fractal::{MnComputation, MnPoint};
-use indicatif::{ProgressBar, ProgressStyle};
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use indicatif::{ProgressBar, ProgressStyle, ParallelProgressIterator};
+use rayon::iter::{ParallelBridge, ParallelIterator};
 
 pub trait Window {
     fn new(
@@ -158,26 +158,27 @@ impl Window for ImageWindow {
     fn fill(&self) -> image::RgbImage {
         let mut imgbuf: image::RgbImage = image::ImageBuffer::new(self.dims.0, self.dims.1);
 
-        let pb = ProgressBar::new(self.dims.0 as u64);
+        let pb = ProgressBar::new(self.dims.0 as u64 * self.dims.1 as u64);
         pb.set_style(ProgressStyle::default_bar()
-            .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} ({eta})")
+            .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {percent}% ({eta})")
             .progress_chars("#>-"));
-        let mut row: Vec<image::Rgb<u8>>;
-        for x in 0..self.dims.0 {
-            row = (0..self.dims.1)
-                .collect::<Vec<u32>>()
-                .par_iter()
-                .map(move |oy| {
-                    let y = oy.to_owned();
-                    self.calc_pixel(x, y)
-                })
-                .collect();
-            pb.set_position(x as u64);
-            for y in 0..self.dims.1 {
-                imgbuf.put_pixel(x, y, row[y as usize]);
-            }
+        pb.set_draw_rate(1);
+        pb.enable_steady_tick(1000);
+        let row: Vec<(u64, u64, image::Rgb<u8>)> = (0_u64..(self.dims.0 as u64 * self.dims.1 as u64))
+            .par_bridge()
+            .map(
+                |p| {
+                    let x = p % self.dims.0 as u64;
+                    let y = p / self.dims.0 as u64;
+                    (x, y, self.calc_pixel(x as u32, y as u32))
+                }
+            )
+            .progress_with(pb)
+            .collect();
+
+        for p in 0_u64..(self.dims.0 as u64 * self.dims.1 as u64) {
+            imgbuf.put_pixel(row[p as usize].0 as u32, row[p as usize].1 as u32, row[p as usize].2);
         }
-        pb.finish_with_message("Done");
         imgbuf
     }
 }

@@ -9,9 +9,9 @@ Simple Mandelbrot fractal generator developped in Rust for training purposes.
 ![](./gallery/uhd_complete.png)
 Command (default coordinates): `mandelbrot -s '(-0.25,0.0)' -w 4.5`
 
-> For an UHD high quality version you can run this command: 
+> For an UHD high quality version you can run this command:
   `mandelbrot -r 7680x4320 -i 25000 -a 16`
-  This command will take **MUCH LONGER** to run (34mn with a Ryzen 3900X), and will stress the CPU during all the process. 
+  This command will take **MUCH LONGER** to run (34mn with a Ryzen 3900X), and will stress the CPU during all the process.
 
 **Near the "Valley of seahorses"**
 
@@ -62,10 +62,10 @@ docker run -it sigbilly/mandelbrot:master -r 1920x1080 -a 8 -i 5000 -o seahorses
 ```
 
 ## Todo
-- Optimization: cycle checking in divergence test
-- Incremental / resumable fractal computation
-- Interface: Dynamic exploration of the set
-- Image: Add color methods / custom colors
-- Cli: shortcuts for common resolutions
-- Corresponding Julia set explorer ?
-- Video generation ?
+- [x] Optimization: cycle checking in divergence test
+- [ ] Incremental / resumable fractal computation
+- [ ] Interface: Dynamic exploration of the set
+- [ ] Image: Add color methods / custom colors
+- [ ] Cli: shortcuts for common resolutions
+- [ ] Corresponding Julia set explorer ?
+- [ ] Video generation ?
